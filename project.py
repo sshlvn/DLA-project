@@ -7,12 +7,8 @@ import json
 app = Flask(__name__)
 
 
-# @app.route('/<video_id>')
-# def get_json_and_wavs(video_id):
-@app.route('/')
-def get_json_and_wavs():
-    
-    video_id = 'unPU5_vkbx4'
+@app.route('/<video_id>')
+def get_json_and_wavs(video_id):
 
     transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
 
