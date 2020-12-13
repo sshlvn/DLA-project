@@ -1,7 +1,4 @@
-flask==1.1.1              
-Flask-RESTful==0.3.7                
-gTTS==2.2.1                            
-heroku==0.1.4                                        
-json5==0.9.3              
-jsonschema==3.2.0                                   
+flask==1.1.1                             
+gTTS==2.2.1                                                                 
+json==2.0.9                                            
 youtube-transcript-api==0.3.1               
