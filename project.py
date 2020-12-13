@@ -1,8 +1,8 @@
-from youtube_transcript_api import YouTubeTranscriptApi
-from gtts import gTTS
-from flask import Flask, Response, jsonify
-from threading import Thread
-import json
+# from youtube_transcript_api import YouTubeTranscriptApi
+# from gtts import gTTS
+from flask import Flask #, Response, jsonify
+# from threading import Thread
+# import json
 
 app = Flask(__name__)
 
