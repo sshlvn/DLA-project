@@ -1,3 +1,1 @@
-flask==1.1.1                             
-gTTS==2.2.1                                                                                                           
-youtube-transcript-api==0.3.1               
+flask==1.1.1                                          
