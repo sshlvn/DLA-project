@@ -1,14 +1,14 @@
 from youtube_transcript_api import YouTubeTranscriptApi
 from gtts import gTTS
-from flask import Flask, Response, jsonify
+from flask import Flask, Response, jsonify, request, send_file
 from threading import Thread
 import json
 
 app = Flask(__name__)
 
 
-@app.route('/<video_id>')
-def get_json_and_wavs(video_id):
+@app.route('/json/<video_id>')
+def get_json(video_id):
 
     transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
 
@@ -54,3 +54,9 @@ def get_json_and_wavs(video_id):
                         content_type="application/json; charset=utf-8")
 
     return jsonify(transcript_list)
+
+@app.route('/wavs/<video_id>&&<fragment_id>')
+def get_wav(video_id, fragment_id):
+    file_name = video_id + '_' + fragment_id + '.wav'
+
+    return send_file(file_name, as_attachment=True)
