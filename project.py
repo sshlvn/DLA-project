@@ -8,9 +8,9 @@ app = Flask(__name__)
 
 TRANSCRIPT_DICT = dict()
 
+
 @app.route('/json/<video_id>')
 def get_json(video_id):
-
     # если транскрипт уже делали
     if video_id in TRANSCRIPT_DICT:
         transcript, lang = TRANSCRIPT_DICT[video_id]
@@ -28,7 +28,8 @@ def get_json(video_id):
     for item in transcript_list:
         lang = str(item).split()[0]
         languages.add(lang)
-        if 'auto-generated' in str(item) or 'создано автоматически' in str(item):
+        if 'auto-generated' in str(item) or 'создано автоматически' in str(
+                item):
             original_lang = str(item).split()[0]
 
     # если видео русскоязычное, то переводим на англ, с любого другого языка переводим на русский
@@ -41,7 +42,8 @@ def get_json(video_id):
     if language in languages:
         transcript = transcript_list.find_transcript([language])
     else:
-        transcript = transcript_list.find_transcript([original_lang]).translate(language)
+        transcript = transcript_list.find_transcript([original_lang]).translate(
+            language)
 
     transcript_list = transcript.fetch()
 
@@ -56,20 +58,18 @@ def get_json(video_id):
     return jsonify(transcript_list)
 
 
-@app.route('/10wavs/<video_id>&&<start_fragment>')
+@app.route('/10wavs/<video_id>&&<int:start_fragment>')
 def generate_10_wavs(video_id, start_fragment):
-    transcript_list = TRANSCRIPT_DICT[video_id]
-    
-    start_fragment = int(start_fragment)
+    transcript, lang = TRANSCRIPT_DICT[video_id]
 
     for i in range(start_fragment, start_fragment + 10):
-        text = transcript_list[i]['text']
-        tts = gTTS(text=text, lang=language, slow=False)
+        text = transcript[i]['text']
+        tts = gTTS(text=text, lang=lang, slow=False)
 
         file_name = video_id + '_' + str(i) + '.wav'
         tts.save(file_name)
-    
-    return 'OK'
+
+    return 'OK, ' + str(start_fragment) + ' - ' + str(start_fragment + 9)
 
 
 @app.route('/wavs/<video_id>&&<fragment_id>')
@@ -78,5 +78,3 @@ def get_wav(video_id, fragment_id):
     return send_file(file_name, as_attachment=True)
     # добавлю ошибку 404 или генерацию ненайденного фрагмента?
     # можно генерацию вперед и назад запустить, если фрагмент не найден
-
-
