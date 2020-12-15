@@ -5,6 +5,12 @@ from threading import Thread
 import json
 from pydub import AudioSegment
 
+# import os
+# dirs = os.listdir()
+# for file in dirs:
+#     print(file)
+import sys
+sys.path.append('/tmp/pip-ephem-wheel-cache-6hu3cnzl/wheels/f5/f7/be/b4620ba5d7205cf4315520cd80174256d1221d5ae886447d82/')
 
 app = Flask(__name__)
 
