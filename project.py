@@ -3,7 +3,7 @@ from gtts import gTTS
 from flask import Flask, Response, jsonify, request, send_file
 from threading import Thread
 import json
-import wave
+import librosa
 
 # для ускорения wav файла
 CHANNELS = 1
@@ -66,17 +66,10 @@ def get_json(video_id):
             tts.save(file_name)
 
             # ускорение
-            file = wave.open(file_name, 'rb')
-            RATE = file.getframerate()
-            SIGNAL = spf.readframes(-1)
-            file.close()
-
-            file = wave.open(file_name, 'wb')
-            file.setnchannels(CHANNELS)
-            file.setsampwidth(SWIDTH)
-            file.setframerate(RATE * NEW_RATE)
-            file.writeframes(SIGNAL)
-            file.close()
+            wav, sr = librosa.load(file_name)
+            wav = librosa.effects.time_stretch(wav, 2.0)
+            
+            librosa.output.write_wav(wav, file_name, sr)
 
     thread = Thread(target=generate)
     thread.start()
@@ -108,17 +101,10 @@ def generate_10_wavs(video_id, start_fragment):
             tts.save(file_name)
 
             # ускорение
-            file = wave.open(file_name, 'rb')
-            RATE = file.getframerate()
-            SIGNAL = spf.readframes(-1)
-            file.close()
-
-            file = wave.open(file_name, 'wb')
-            file.setnchannels(CHANNELS)
-            file.setsampwidth(SWIDTH)
-            file.setframerate(RATE * NEW_RATE)
-            file.writeframes(SIGNAL)
-            file.close()
+            wav, sr = librosa.load(file_name)
+            wav = librosa.effects.time_stretch(wav, 2.0)
+            
+            librosa.output.write_wav(wav, file_name, sr)
 
     thread = Thread(target=generate)
     thread.start()
