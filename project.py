@@ -61,7 +61,7 @@ def get_json(video_id):
             tts = gTTS(text=text, lang=language, slow=False)
 
             file_name = video_id + '_' + str(i) + '.wav'
-            tts.save(file_name)
+            tts.save('curr.wav')
 
             # ускорение
 #             wav, sr = librosa.load(file_name)
