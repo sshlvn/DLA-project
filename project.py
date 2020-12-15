@@ -29,10 +29,15 @@ def get_json(video_id):
 
     # языки, для которых уже доступен транскрипт
     languages = set()
+    
+    count = 0
 
     for item in transcript_list:
         lang = str(item).split()[0]
         languages.add(lang)
+        if count == 0:
+            original_lang = lang
+            count += 1
         if 'auto-generated' in str(item) or 'создано автоматически' in str(
                 item):
             original_lang = str(item).split()[0]
