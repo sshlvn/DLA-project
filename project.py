@@ -4,6 +4,8 @@ from flask import Flask, Response, jsonify, request, send_file
 from threading import Thread
 import json
 # import librosa
+from audiotsm import phasevocoder
+from audiotsm.io.wav import WavReader, WavWriter
 
 
 app = Flask(__name__)
@@ -67,6 +69,11 @@ def get_json(video_id):
             
 #             librosa.output.write_wav(wav, file_name, sr)
 
+            with WavReader('curr.wav') as reader:
+                with WavWriter(file_name, reader.channels, reader.samplerate) as writer:
+                    tsm = phasevocoder(reader.channels, speed=2.0)
+                    tsm.run(reader, writer)
+
     thread = Thread(target=generate)
     thread.start()
 
@@ -94,13 +101,19 @@ def generate_10_wavs(video_id, start_fragment):
             tts = gTTS(text=text, lang=lang, slow=False)
 
             file_name = video_id + '_' + str(i) + '.wav'
-            tts.save(file_name)
+            tts.save('curr.wav')
 
             # ускорение
 #             wav, sr = librosa.load(file_name)
 #             wav = librosa.effects.time_stretch(wav, 2.0)
             
 #             librosa.output.write_wav(wav, file_name, sr)
+
+
+            with WavReader('curr.wav') as reader:
+                with WavWriter(file_name, reader.channels, reader.samplerate) as writer:
+                    tsm = phasevocoder(reader.channels, speed=2.0)
+                    tsm.run(reader, writer)
 
     thread = Thread(target=generate)
     thread.start()
