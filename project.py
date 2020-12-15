@@ -50,6 +50,18 @@ def get_json(video_id):
 
     transcript_list = transcript.fetch()
 
+    # генерятся первые 10
+    def generate():
+        for i in range(10):
+            text = transcript_list[i]['text']
+            tts = gTTS(text=text, lang=language, slow=False)
+
+            file_name = video_id + '_' + str(i) + '.wav'
+            tts.save(file_name)
+
+    thread = Thread(target=generate)
+    thread.start()
+
     TRANSCRIPT_DICT[video_id] = (transcript_list, language)
 
     # для русского языка отдельно нужно прописать utf-8
