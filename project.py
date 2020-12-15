@@ -59,6 +59,8 @@ def get_json(video_id):
 @app.route('/10wavs/<video_id>&&<start_fragment>')
 def generate_10_wavs(video_id, start_fragment):
     transcript_list = TRANSCRIPT_DICT[video_id]
+    
+    start_fragment = int(start_fragment)
 
     for i in range(start_fragment, start_fragment + 10):
         text = transcript_list[i]['text']
