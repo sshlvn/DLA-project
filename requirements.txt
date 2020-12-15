@@ -3,3 +3,4 @@ flask==1.1.1
 gtts==2.2.1                                                                                                           
 youtube-transcript-api==0.3.1 
 pydub==0.24.1
+ffprobe==0.5
