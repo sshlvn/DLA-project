@@ -3,6 +3,12 @@ from gtts import gTTS
 from flask import Flask, Response, jsonify, request, send_file
 from threading import Thread
 import json
+import wave
+
+# для ускорения wav файла
+CHANNELS = 1
+SWIDTH = 2
+NEW_RATE = 2.
 
 app = Flask(__name__)
 
@@ -59,6 +65,19 @@ def get_json(video_id):
             file_name = video_id + '_' + str(i) + '.wav'
             tts.save(file_name)
 
+            # ускорение
+            file = wave.open(file_name, 'rb')
+            RATE = file.getframerate()
+            SIGNAL = spf.readframes(-1)
+            file.close()
+
+            file = wave.open(file_name, 'wb')
+            file.setnchannels(CHANNELS)
+            file.setsampwidth(SWIDTH)
+            file.setframerate(RATE * NEW_RATE)
+            file.writeframes(SIGNAL)
+            file.close()
+
     thread = Thread(target=generate)
     thread.start()
 
@@ -87,6 +106,19 @@ def generate_10_wavs(video_id, start_fragment):
 
             file_name = video_id + '_' + str(i) + '.wav'
             tts.save(file_name)
+
+            # ускорение
+            file = wave.open(file_name, 'rb')
+            RATE = file.getframerate()
+            SIGNAL = spf.readframes(-1)
+            file.close()
+
+            file = wave.open(file_name, 'wb')
+            file.setnchannels(CHANNELS)
+            file.setsampwidth(SWIDTH)
+            file.setframerate(RATE * NEW_RATE)
+            file.writeframes(SIGNAL)
+            file.close()
 
     thread = Thread(target=generate)
     thread.start()
