@@ -20,7 +20,10 @@ def get_json(video_id):
                             content_type="application/json; charset=utf-8")
         return jsonify(transcript)
 
-    transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+    try:
+        transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+    except:
+        return 'Subtitles not found for video ' + video_id
 
     # языки, для которых уже доступен транскрипт
     languages = set()
@@ -75,6 +78,7 @@ def generate_10_wavs(video_id, start_fragment):
 @app.route('/wavs/<video_id>&&<fragment_id>')
 def get_wav(video_id, fragment_id):
     file_name = video_id + '_' + fragment_id + '.wav'
-    return send_file(file_name, as_attachment=True)
-    # добавлю ошибку 404 или генерацию ненайденного фрагмента?
-    # можно генерацию вперед и назад запустить, если фрагмент не найден
+    try:
+        return send_file(file_name, as_attachment=True)
+    except:
+        return 'File' + file_name + 'not found'
