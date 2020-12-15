@@ -4,3 +4,4 @@ gtts==2.2.1
 youtube-transcript-api==0.3.1 
 librosa==0.8.0
 soundfile==0.10.2
+libsndfile==1.0.30
