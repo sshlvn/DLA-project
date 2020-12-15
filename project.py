@@ -6,8 +6,8 @@ import json
 
 app = Flask(__name__)
 
+# сохраняем video_id: (transcript, language)
 TRANSCRIPT_DICT = dict()
-
 
 @app.route('/json/<video_id>')
 def get_json(video_id):
@@ -41,7 +41,7 @@ def get_json(video_id):
     else:
         language = 'ru'
 
-    # если есть уже сделанный транскрипт, то берем его, если нет, то переводим
+    # если есть уже сделанный автором транскрипт, то берем его, если нет, то переводим
     if language in languages:
         transcript = transcript_list.find_transcript([language])
     else:
@@ -68,14 +68,18 @@ def generate_10_wavs(video_id, start_fragment):
     except:
         return 'Transcript not found for video ' + video_id
 
-    for i in range(start_fragment, start_fragment + 10):
-        text = transcript[i]['text']
-        tts = gTTS(text=text, lang=lang, slow=False)
+    def generate():
+        for i in range(start_fragment, start_fragment + 10):
+            text = transcript[i]['text']
+            tts = gTTS(text=text, lang=lang, slow=False)
 
-        file_name = video_id + '_' + str(i) + '.wav'
-        tts.save(file_name)
+            file_name = video_id + '_' + str(i) + '.wav'
+            tts.save(file_name)
 
-    return 'OK, generated ' + str(start_fragment) + ' - ' + str(start_fragment + 9)
+    thread = Thread(target=generate)
+    thread.start()
+
+    return 'OK, generating ' + str(start_fragment) + ' - ' + str(start_fragment + 9)
 
 
 @app.route('/wavs/<video_id>&&<fragment_id>')
