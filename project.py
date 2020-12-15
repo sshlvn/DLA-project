@@ -66,6 +66,8 @@ def generate_10_wavs(video_id, start_fragment):
 
         file_name = video_id + '_' + str(i) + '.wav'
         tts.save(file_name)
+    
+    return 'OK'
 
 
 @app.route('/wavs/<video_id>&&<fragment_id>')
