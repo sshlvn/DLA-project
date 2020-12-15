@@ -3,7 +3,7 @@ from gtts import gTTS
 from flask import Flask, Response, jsonify, request, send_file
 from threading import Thread
 import json
-import librosa
+# import librosa
 
 
 app = Flask(__name__)
@@ -62,10 +62,10 @@ def get_json(video_id):
             tts.save(file_name)
 
             # ускорение
-            wav, sr = librosa.load(file_name)
-            wav = librosa.effects.time_stretch(wav, 2.0)
+#             wav, sr = librosa.load(file_name)
+#             wav = librosa.effects.time_stretch(wav, 2.0)
             
-            librosa.output.write_wav(wav, file_name, sr)
+#             librosa.output.write_wav(wav, file_name, sr)
 
     thread = Thread(target=generate)
     thread.start()
@@ -97,10 +97,10 @@ def generate_10_wavs(video_id, start_fragment):
             tts.save(file_name)
 
             # ускорение
-            wav, sr = librosa.load(file_name)
-            wav = librosa.effects.time_stretch(wav, 2.0)
+#             wav, sr = librosa.load(file_name)
+#             wav = librosa.effects.time_stretch(wav, 2.0)
             
-            librosa.output.write_wav(wav, file_name, sr)
+#             librosa.output.write_wav(wav, file_name, sr)
 
     thread = Thread(target=generate)
     thread.start()
