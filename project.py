@@ -10,7 +10,8 @@ from pydub import AudioSegment
 # for file in dirs:
 #     print(file)
 import sys
-sys.path.append('/tmp/pip-ephem-wheel-cache-6hu3cnzl/wheels/f5/f7/be/b4620ba5d7205cf4315520cd80174256d1221d5ae886447d82/')
+sys.path.append('/tmp/pip-ephem-wheel-cache-6hu3cnzl/wheels/f5/f7/be/b4620ba5d7205cf4315520cd80174256d1221d5ae886447d82')
+sys.path.append('/tmp/pip-ephem-wheel-cache-6hu3cnzl/wheels/aa/0d/3c/5a9cbae53044e993a211358ddae115ce34bcbc29f7a3bd9155')
 
 app = Flask(__name__)
 
