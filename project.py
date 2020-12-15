@@ -3,15 +3,9 @@ from gtts import gTTS
 from flask import Flask, Response, jsonify, request, send_file
 from threading import Thread
 import json
-from pydub import AudioSegment
+from audiotsm import phasevocoder
+from audiotsm.io.wav import WavReader, WavWriter
 
-# import os
-# dirs = os.listdir()
-# for file in dirs:
-#     print(file)
-import sys
-sys.path.append('/tmp/pip-ephem-wheel-cache-6hu3cnzl/wheels/f5/f7/be/b4620ba5d7205cf4315520cd80174256d1221d5ae886447d82')
-sys.path.append('/tmp/pip-ephem-wheel-cache-6hu3cnzl/wheels/aa/0d/3c/5a9cbae53044e993a211358ddae115ce34bcbc29f7a3bd9155')
 
 app = Flask(__name__)
 
@@ -36,15 +30,10 @@ def get_json(video_id):
 
     # языки, для которых уже доступен транскрипт
     languages = set()
-    
-    count = 0
 
     for item in transcript_list:
         lang = str(item).split()[0]
         languages.add(lang)
-        if count == 0:
-            original_lang = lang
-            count += 1
         if 'auto-generated' in str(item) or 'создано автоматически' in str(
                 item):
             original_lang = str(item).split()[0]
@@ -71,17 +60,18 @@ def get_json(video_id):
             tts = gTTS(text=text, lang=language, slow=False)
 
             file_name = video_id + '_' + str(i) + '.wav'
-            tts.save(file_name)
+            tts.save('curr.wav')
 
-            sound = AudioSegment.from_file(file_name)
+            # ускорение
+#             wav, sr = librosa.load(file_name)
+#             wav = librosa.effects.time_stretch(wav, 2.0)
+            
+#             librosa.output.write_wav(wav, file_name, sr)
 
-            sound_with_altered_frame_rate = sound._spawn(sound.raw_data, overrides={
-                 "frame_rate": int(sound.frame_rate * 2.0)
-              })
-     
-            new_sound = sound_with_altered_frame_rate.set_frame_rate(sound.frame_rate)
-            new_sound.export(file_name, format='wav')
-
+            with WavReader('curr.wav') as reader:
+                with WavWriter(file_name, reader.channels, reader.samplerate) as writer:
+                    tsm = phasevocoder(reader.channels, speed=2.0)
+                    tsm.run(reader, writer)
 
     thread = Thread(target=generate)
     thread.start()
@@ -112,14 +102,11 @@ def generate_10_wavs(video_id, start_fragment):
             file_name = video_id + '_' + str(i) + '.wav'
             tts.save('curr.wav')
 
-            sound = AudioSegment.from_file(file_name)
 
-            sound_with_altered_frame_rate = sound._spawn(sound.raw_data, overrides={
-                 "frame_rate": int(sound.frame_rate * 2.0)
-              })
-     
-            new_sound = sound_with_altered_frame_rate.set_frame_rate(sound.frame_rate)
-            new_sound.export(file_name, format='wav')
+            with WavReader('curr.wav') as reader:
+                with WavWriter(file_name, reader.channels, reader.samplerate) as writer:
+                    tsm = phasevocoder(reader.channels, speed=2.0)
+                    tsm.run(reader, writer)
 
     thread = Thread(target=generate)
     thread.start()
