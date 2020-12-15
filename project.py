@@ -5,10 +5,6 @@ from threading import Thread
 import json
 import librosa
 
-# для ускорения wav файла
-CHANNELS = 1
-SWIDTH = 2
-NEW_RATE = 2.
 
 app = Flask(__name__)
 
