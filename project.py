@@ -6,9 +6,19 @@ import json
 
 app = Flask(__name__)
 
+TRANSCRIPT_DICT = dict()
 
 @app.route('/json/<video_id>')
 def get_json(video_id):
+
+    # если транскрипт уже делали
+    if video_id in TRANSCRIPT_DICT:
+        transcript, lang = TRANSCRIPT_DICT[video_id]
+        if lang == 'ru':
+            json_string = json.dumps(transcript, ensure_ascii=False)
+            return Response(json_string,
+                            content_type="application/json; charset=utf-8")
+        return jsonify(transcript)
 
     transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
 
@@ -35,17 +45,7 @@ def get_json(video_id):
 
     transcript_list = transcript.fetch()
 
-    def generation():
-        for i in range(len(transcript_list)):
-            text = transcript_list[i]['text']
-            tts = gTTS(text=text, lang=language, slow=False)
-
-            file_name = video_id + '_' + str(i) + '.wav'
-
-            tts.save(file_name)
-
-    thread = Thread(target=generation)
-    thread.start()
+    TRANSCRIPT_DICT[video_id] = (transcript_list, language)
 
     # для русского языка отдельно нужно прописать utf-8
     if language == 'ru':
@@ -55,8 +55,24 @@ def get_json(video_id):
 
     return jsonify(transcript_list)
 
+
+@app.route('/10wavs/<video_id>&&<start_fragment>')
+def generate_10_wavs(video_id, start_fragment):
+    transcript_list = TRANSCRIPT_DICT[video_id]
+
+    for i in range(start_fragment, start_fragment + 10):
+        text = transcript_list[i]['text']
+        tts = gTTS(text=text, lang=language, slow=False)
+
+        file_name = video_id + '_' + str(i) + '.wav'
+        tts.save(file_name)
+
+
 @app.route('/wavs/<video_id>&&<fragment_id>')
 def get_wav(video_id, fragment_id):
     file_name = video_id + '_' + fragment_id + '.wav'
-
     return send_file(file_name, as_attachment=True)
+    # добавлю ошибку 404 или генерацию ненайденного фрагмента?
+    # можно генерацию вперед и назад запустить, если фрагмент не найден
+
+
