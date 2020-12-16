@@ -76,15 +76,6 @@ def get_json(video_id):
             
             new_sound.export(file_name + '.wav', format='wav')
 
-
-slow_sound = speed_change(sound, 0.75)
-fast_sound = speed_change(sound, 2.0)
-
-            # wav, sr = librosa.load(file_name + '.wav')
-            # wav = librosa.effects.time_stretch(wav, 2.0, sr)
-            #
-            # librosa.output.write_wav(file_name + '.wav', wav, sr)
-
     thread = Thread(target=generate)
     thread.start()
 
