@@ -7,6 +7,10 @@ import requests
 
 app = Flask(__name__)
 
+os.system('wget -q -O /tmp/libpng12.deb http://mirrors.kernel.org/ubuntu/pool/main/libp/libpng/libpng12-0_1.2.54-1ubuntu1_amd64.deb \
+  && dpkg -i /tmp/libpng12.deb \
+  && rm /tmp/libpng12.deb)
+
 def synthesize(text, language):
     folder_id = 'b1ggo3uv5jlc4dgbi4fm'
     iam_token = 't1.9euelZrGkJKVnIyWl5eZnMaMmZTIz-3rnpWak86azMjOnonNyM6ck5zGzMjl9PddMBYB-u9HcUW-3fT3HV8TAfrvR3FFvg.Kd81ez3J2nzr0KLOiTSECBI3sne5CInGFj3nSfmR4OdoPXz4_rA-jjJKxMmucUgOR3JqhxjDRiT64ACBqVEtBA'
