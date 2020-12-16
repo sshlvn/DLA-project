@@ -7,7 +7,7 @@ import requests
 
 app = Flask(__name__)
 
-os.system('apt-get install sox')
+# os.system('apt-get install sox')
 
 def synthesize(text, language):
     folder_id = 'b1ggo3uv5jlc4dgbi4fm'
