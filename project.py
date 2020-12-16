@@ -9,6 +9,7 @@ import sox
 app = Flask(__name__)
 
 
+# запрос в Yandex SpeechKit для генерации речи
 def synthesize(text, language):
     folder_id = 'b1ggo3uv5jlc4dgbi4fm'
     iam_token = 't1.9euelZrGkJKVnIyWl5eZnMaMmZTIz-3rnpWak86azMjOnonNyM6ck5zGzMjl9PddMBYB-u9HcUW-3fT3HV8TAfrvR3FFvg.Kd81ez3J2nzr0KLOiTSECBI3sne5CInGFj3nSfmR4OdoPXz4_rA-jjJKxMmucUgOR3JqhxjDRiT64ACBqVEtBA'
@@ -27,7 +28,7 @@ def synthesize(text, language):
         'format': 'lpcm',
         'sampleRateHertz': 48000,
         'voice': voice,
-        'speed': '2.0',
+        'speed': '1.7',
     }
 
     with requests.post(url, headers=headers, data=data, stream=True) as resp:
