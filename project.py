@@ -4,12 +4,15 @@ from flask import Flask, Response, jsonify, request, send_file
 from threading import Thread
 import json
 import librosa
+from pydub import AudioSegment
 
+AudioSegment.converter = '/app/.apt/usr/local/bin/ffmpeg'
 
 app = Flask(__name__)
 
 # сохраняем video_id: (transcript, language)
 TRANSCRIPT_DICT = dict()
+
 
 @app.route('/json/<video_id>')
 def get_json(video_id):
@@ -59,13 +62,15 @@ def get_json(video_id):
             tts = gTTS(text=text, lang=language, slow=False)
 
             file_name = video_id + '_' + str(i)
-            tts.save(file_name + '.mp3')
+            tts.save(file_name)
 
-            # ускорение
-            wav, sr = librosa.load(file_name + '.mp3')
-            wav = librosa.effects.time_stretch(wav, 2.0)
-            
-            librosa.output.write_wav(wav, file_name + '.wav', sr)
+            AudioSegment.from_mp3(file_name + '.mp3').export(file_name + '.wav',
+                                                            format='wav')
+
+            wav, sr = librosa.load(file_name + '.wav')
+            wav = librosa.effects.time_stretch(wav, 2.0, sr)
+
+            librosa.output.write_wav(file_name + '.wav', wav, sr)
 
     thread = Thread(target=generate)
     thread.start()
@@ -94,17 +99,21 @@ def generate_10_wavs(video_id, start_fragment):
             tts = gTTS(text=text, lang=lang, slow=False)
 
             file_name = video_id + '_' + str(i)
-            tts.save(file_name + '.mp3')
+            tts.save(file_name)
 
-            wav, sr = librosa.load(file_name + '.mp3')
-            wav = librosa.effects.time_stretch(wav, 2.0)
-            
-            librosa.output.write_wav(wav, file_name + '.wav', sr)
+            AudioSegment.from_mp3(file_name + '.mp3').export(file_name + '.wav',
+                                                             format='wav')
+
+            wav, sr = librosa.load(file_name + '.wav')
+            wav = librosa.effects.time_stretch(wav, 2.0, sr)
+
+            librosa.output.write_wav(file_name + '.wav', wav, sr)
 
     thread = Thread(target=generate)
     thread.start()
 
-    return 'OK, generating ' + str(start_fragment) + ' - ' + str(start_fragment + 9)
+    return 'OK, generating ' + str(start_fragment) + ' - ' + str(
+        start_fragment + 9)
 
 
 @app.route('/wavs/<video_id>&&<fragment_id>')
