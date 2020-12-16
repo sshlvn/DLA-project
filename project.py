@@ -67,7 +67,7 @@ def get_json(video_id):
             sound = AudioSegment.from_file(file_name + '.wav')
 
             # изменение скорости
-            sound_with_altered_frame_rate = sound._spawn(sound.raw_data, overrides={"frame_rate": int(sound.frame_rate * 1.5)})
+            sound_with_altered_frame_rate = sound._spawn(sound.raw_data, overrides={"frame_rate": int(sound.frame_rate * 1.25)})
             new_sound = sound_with_altered_frame_rate.set_frame_rate(sound.frame_rate)
             new_sound.export(file_name + '.wav', format='wav')
 
@@ -106,7 +106,7 @@ def generate_10_wavs(video_id, start_fragment):
             sound = AudioSegment.from_file(file_name + '.wav')
 
             # изменение скорости
-            sound_with_altered_frame_rate = sound._spawn(sound.raw_data, overrides={"frame_rate": int(sound.frame_rate * 1.5)})
+            sound_with_altered_frame_rate = sound._spawn(sound.raw_data, overrides={"frame_rate": int(sound.frame_rate * 1.25)})
             new_sound = sound_with_altered_frame_rate.set_frame_rate(sound.frame_rate)
             new_sound.export(file_name + '.wav', format='wav')
 
