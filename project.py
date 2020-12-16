@@ -104,7 +104,7 @@ def generate_10_wavs(video_id, start_fragment):
     def generate():
         for i in range(start_fragment, end_fragment):
             text = transcript[i]['text']
-            file_name = video_id + '_' + int(i) + '.wav'
+            file_name = video_id + '_' + str(i) + '.wav'
             
             with open('temp.raw', "wb") as f:
                 for audio_content in synthesize(text, lang):
