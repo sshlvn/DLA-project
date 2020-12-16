@@ -5,7 +5,7 @@ import json
 from pydub import AudioSegment
 from yandex_speech import TTS
 
-tts = TTS('jane', 'wav', '60589d42-0e42-b742-8942-thekeyisalie', speed=2.0)
+tts = TTS('jane', 'wav', '720044ba-7120-407c-be9a-aca0076bdb0e', speed=2.0)
 
 app = Flask(__name__)
 
