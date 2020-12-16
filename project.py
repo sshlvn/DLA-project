@@ -19,7 +19,7 @@ def synthesize(text, language):
         'Authorization': 'Bearer ' + iam_token,
     }
     
-    voice = 'alena' if language == 'ru-RU' else 'nick'
+    voice = 'alena' if language == 'ru-RU' else 'alyss'
 
     data = {
         'text': text,
@@ -28,7 +28,7 @@ def synthesize(text, language):
         'format': 'lpcm',
         'sampleRateHertz': 48000,
         'voice': voice,
-        'speed': '1.7',
+        'speed': '1.4',
     }
 
     with requests.post(url, headers=headers, data=data, stream=True) as resp:
