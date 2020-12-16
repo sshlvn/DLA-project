@@ -56,14 +56,6 @@ def get_json(video_id):
     return Response(json_string,
                     content_type="application/json; charset=utf-8")
 
-    # для русского языка отдельно нужно прописать utf-8
-    # if lang == 'ru':
-    #     json_string = json.dumps(transcript, ensure_ascii=False)
-    #     return Response(json_string,
-    #                     content_type="application/json; charset=utf-8")
-    #
-    # return jsonify(transcript_list)
-
 
 # генерация 10 wav начиная со  start_fragment
 @app.route('/10wavs/<video_id>&&<int:start_fragment>')
