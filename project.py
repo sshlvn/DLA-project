@@ -71,7 +71,7 @@ def generate_10_wavs(video_id, start_fragment):
 
     def generate():
         for i in range(start_fragment, end_fragment):
-            file_name = video_id + '_' + fragment_id + '.wav'
+            file_name = video_id + '_' + str(i) + '.wav'
             text = transcript[i]['text']
             tts.generate(text=text)
             tts.save(file_name)
