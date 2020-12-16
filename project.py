@@ -15,6 +15,8 @@ def synthesize(text, language):
     headers = {
         'Authorization': 'Bearer ' + iam_token,
     }
+    
+    voice = 'filipp' if language == 'ru-RU' else 'nick'
 
     data = {
         'text': text,
@@ -22,7 +24,7 @@ def synthesize(text, language):
         'folderId': folder_id,
         'format': 'lpcm',
         'sampleRateHertz': 48000,
-        'voice': 'filipp', #'alyss'
+        'voice': voice,
         'speed': 1.5,
     }
 
