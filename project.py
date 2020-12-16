@@ -6,7 +6,7 @@ import json
 # import librosa
 from pydub import AudioSegment
 
-AudioSegment.converter = '/app/.apt/usr/local/bin/ffmpeg'
+# AudioSegment.converter = '/app/.apt/usr/local/bin/ffmpeg'
 
 app = Flask(__name__)
 
