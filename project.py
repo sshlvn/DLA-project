@@ -62,10 +62,23 @@ def get_json(video_id):
             tts = gTTS(text=text, lang=language, slow=False)
 
             file_name = video_id + '_' + str(i)
-            tts.save(file_name)
+            tts.save(file_name + '.mp3')
 
-            AudioSegment.from_mp3(file_name + '.mp3').export(file_name + '.wav',
-                                                            format='wav')
+            AudioSegment.from_mp3(file_name + '.mp3').export(file_name + '.wav', format='wav')
+            
+            sound = AudioSegment.from_file(file_name + '.wav')
+
+
+            sound_with_altered_frame_rate = sound._spawn(sound.raw_data, overrides={
+                 "frame_rate": int(sound.frame_rate * 2.0)
+              })
+            new_sound = sound_with_altered_frame_rate.set_frame_rate(sound.frame_rate)
+            
+            new_sound.export(file_name + '.wav', format='wav')
+
+
+slow_sound = speed_change(sound, 0.75)
+fast_sound = speed_change(sound, 2.0)
 
             # wav, sr = librosa.load(file_name + '.wav')
             # wav = librosa.effects.time_stretch(wav, 2.0, sr)
@@ -99,15 +112,19 @@ def generate_10_wavs(video_id, start_fragment):
             tts = gTTS(text=text, lang=lang, slow=False)
 
             file_name = video_id + '_' + str(i)
-            tts.save(file_name)
+            tts.save(file_name + '.mp3')
 
-            AudioSegment.from_mp3(file_name + '.mp3').export(file_name + '.wav',
-                                                             format='wav')
+            AudioSegment.from_mp3(file_name + '.mp3').export(file_name + '.wav', format='wav')
+            
+            sound = AudioSegment.from_file(file_name + '.wav')
 
-            # wav, sr = librosa.load(file_name + '.wav')
-            # wav = librosa.effects.time_stretch(wav, 2.0, sr)
-            #
-            # librosa.output.write_wav(file_name + '.wav', wav, sr)
+
+            sound_with_altered_frame_rate = sound._spawn(sound.raw_data, overrides={
+                 "frame_rate": int(sound.frame_rate * 2.0)
+              })
+            new_sound = sound_with_altered_frame_rate.set_frame_rate(sound.frame_rate)
+            
+            new_sound.export(file_name + '.wav', format='wav')
 
     thread = Thread(target=generate)
     thread.start()
