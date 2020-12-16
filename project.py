@@ -3,10 +3,10 @@ from gtts import gTTS
 from flask import Flask, Response, jsonify, request, send_file
 from threading import Thread
 import json
-import librosa
+# import librosa
 from pydub import AudioSegment
 
-# AudioSegment.converter = '/app/.apt/usr/local/bin/ffmpeg'
+AudioSegment.converter = '/app/.apt/usr/local/bin/ffmpeg'
 
 app = Flask(__name__)
 
@@ -67,10 +67,10 @@ def get_json(video_id):
             AudioSegment.from_mp3(file_name + '.mp3').export(file_name + '.wav',
                                                             format='wav')
 
-            wav, sr = librosa.load(file_name + '.wav')
-            wav = librosa.effects.time_stretch(wav, 2.0, sr)
-
-            librosa.output.write_wav(file_name + '.wav', wav, sr)
+            # wav, sr = librosa.load(file_name + '.wav')
+            # wav = librosa.effects.time_stretch(wav, 2.0, sr)
+            #
+            # librosa.output.write_wav(file_name + '.wav', wav, sr)
 
     thread = Thread(target=generate)
     thread.start()
@@ -104,22 +104,13 @@ def generate_10_wavs(video_id, start_fragment):
             AudioSegment.from_mp3(file_name + '.mp3').export(file_name + '.wav',
                                                              format='wav')
 
-            wav, sr = librosa.load(file_name + '.wav')
-            wav = librosa.effects.time_stretch(wav, 2.0, sr)
-
-            librosa.output.write_wav(file_name + '.wav', wav, sr)
+            # wav, sr = librosa.load(file_name + '.wav')
+            # wav = librosa.effects.time_stretch(wav, 2.0, sr)
+            #
+            # librosa.output.write_wav(file_name + '.wav', wav, sr)
 
     thread = Thread(target=generate)
     thread.start()
 
     return 'OK, generating ' + str(start_fragment) + ' - ' + str(
         start_fragment + 9)
-
-
-@app.route('/wavs/<video_id>&&<fragment_id>')
-def get_wav(video_id, fragment_id):
-    file_name = video_id + '_' + fragment_id + '.wav'
-    try:
-        return send_file(file_name, as_attachment=True)
-    except:
-        return 'File ' + file_name + ' not found'
