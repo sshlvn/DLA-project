@@ -64,6 +64,9 @@ def get_json(video_id):
 def generate_10_wavs(video_id, start_fragment):
     
     transcript, lang = get_transcript(video_id)
+    
+    if start_fragment >= len(transcript):
+        return 'There are only ' + str(len(transcript)) + ' fragments in video ' + video_id + ' but you asked for fragment №' + str(start_fragment)
 
     def generate():
         for i in range(start_fragment, start_fragment + 10):
