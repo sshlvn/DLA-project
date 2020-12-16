@@ -19,7 +19,7 @@ def synthesize(text, language):
         'Authorization': 'Bearer ' + iam_token,
     }
     
-    voice = 'alena' if language == 'ru-RU' else 'alyss'
+    voice = 'alena' if language == 'ru-RU' else 'nick'
 
     data = {
         'text': text,
