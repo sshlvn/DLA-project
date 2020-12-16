@@ -8,7 +8,7 @@ import sox
 
 app = Flask(__name__)
 
-os.system('apt-get install sox libsox-fmt-mp3')
+# os.system('apt-get install sox libsox-fmt-mp3')
 # os.system('sudo dpkg -i libpng12.deb')
 
 def synthesize(text, language):
@@ -114,9 +114,9 @@ def generate_10_wavs(video_id, start_fragment):
                 for audio_content in synthesize(text, lang):
                     f.write(audio_content)
         
-#             os.system('sox -r 48000 -b 16 -e signed-integer -c 1 temp.raw ' + file_name)
-            tfm = sox.Transformer()
-            tfm.build('temp.raw', file_name, sample_rate_in=48000)
+            os.system('sox -r 48000 -b 16 -e signed-integer -c 1 temp.raw ' + file_name)
+#             tfm = sox.Transformer()
+#             tfm.build('temp.raw', file_name, sample_rate_in=48000)
 
     thread = Thread(target=generate)
     thread.start()
