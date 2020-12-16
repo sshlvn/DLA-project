@@ -122,3 +122,12 @@ def generate_10_wavs(video_id, start_fragment):
 
     return 'OK, generating ' + str(start_fragment) + ' - ' + str(
         start_fragment + 9)
+
+
+@app.route('/wavs/<video_id>&&<fragment_id>')
+def get_wav(video_id, fragment_id):
+    file_name = video_id + '_' + fragment_id + '.wav'
+    try:
+        return send_file(file_name, as_attachment=True)
+    except:
+        return 'File ' + file_name + ' not found'
