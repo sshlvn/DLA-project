@@ -1,5 +1,4 @@
-gtts==2.2.1
-yandex_speech==0.4
+requests==2.25.1
 youtube-transcript-api==0.3.1
 audioread==2.1.8
 decorator==4.4.2
