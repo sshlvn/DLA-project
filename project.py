@@ -1,14 +1,39 @@
 from youtube_transcript_api import YouTubeTranscriptApi
-from gtts import gTTS
 from flask import Flask, Response, jsonify, request, send_file
 from threading import Thread
 import json
-from pydub import AudioSegment
+import os
+import requests
 
 app = Flask(__name__)
 
-WAV_SPEED = 1.35
+def synthesize(text, language):
+    folder_id = 'b1ggo3uv5jlc4dgbi4fm'
+    iam_token = 't1.9euelZrGkJKVnIyWl5eZnMaMmZTIz-3rnpWak86azMjOnonNyM6ck5zGzMjl9PddMBYB-u9HcUW-3fT3HV8TAfrvR3FFvg.Kd81ez3J2nzr0KLOiTSECBI3sne5CInGFj3nSfmR4OdoPXz4_rA-jjJKxMmucUgOR3JqhxjDRiT64ACBqVEtBA'
+    url = 'https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize'
+    
+    headers = {
+        'Authorization': 'Bearer ' + iam_token,
+    }
 
+    data = {
+        'text': text,
+        'lang': language,
+        'folderId': folder_id,
+        'format': 'lpcm',
+        'sampleRateHertz': 48000,
+        'voice': 'filipp', #'alyss'
+        'speed': 1.5,
+    }
+
+    with requests.post(url, headers=headers, data=data, stream=True) as resp:
+        if resp.status_code != 200:
+            raise RuntimeError("Invalid response received: code: %d, message: %s" % (resp.status_code, resp.text))
+
+        for chunk in resp.iter_content(chunk_size=None):
+            yield chunk
+
+            
 # получение субтитров на нужном языке
 def get_transcript(video_id):
     try:
@@ -43,6 +68,11 @@ def get_transcript(video_id):
             language)
 
     transcript_list = transcript.fetch()
+    
+    if language == 'ru':
+        language = 'ru-RU
+    else:
+        language = 'en-US'
 
     return transcript_list, language
 
@@ -72,20 +102,13 @@ def generate_10_wavs(video_id, start_fragment):
     def generate():
         for i in range(start_fragment, end_fragment):
             text = transcript[i]['text']
-            tts = gTTS(text=text, lang=lang, slow=False)
-
-            file_name = video_id + '_' + str(i)
-            tts.save(file_name + '.mp3')
-
-            # gtts не может сделать нормальный .wav
-            AudioSegment.from_mp3(file_name + '.mp3').export(file_name + '.wav', format='wav')
-
-            wav = AudioSegment.from_file(file_name + '.wav')
-
-            # изменение скорости
-            new_wav = wav._spawn(wav.raw_data, overrides={"frame_rate": int(wav.frame_rate * WAV_SPEED)})
-            new_wav = new_wav.set_frame_rate(wav.frame_rate)
-            new_wav.export(file_name + '.wav', format='wav')
+            file_name = video_id + '_' + int(i) + '.wav'
+            
+            with open('temp.raw', "wb") as f:
+                for audio_content in synthesize(text, lang):
+                    f.write(audio_content)
+        
+            os.system('sox -r 48000 -b 16 -e signed-integer -c 1 temp.raw ' + file_name)
 
     thread = Thread(target=generate)
     thread.start()
