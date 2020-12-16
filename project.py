@@ -72,7 +72,7 @@ def get_transcript(video_id):
     transcript_list = transcript.fetch()
     
     if language == 'ru':
-        language = 'ru-RU
+        language = 'ru-RU'
     else:
         language = 'en-US'
 
