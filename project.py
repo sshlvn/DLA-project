@@ -27,7 +27,7 @@ def synthesize(text, language):
         'format': 'lpcm',
         'sampleRateHertz': 48000,
         'voice': voice,
-        'speed': 1.5,
+        'speed': '1.5',
     }
 
     with requests.post(url, headers=headers, data=data, stream=True) as resp:
