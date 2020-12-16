@@ -1,13 +1,13 @@
 from youtube_transcript_api import YouTubeTranscriptApi
+from gtts import gTTS
 from flask import Flask, Response, jsonify, request, send_file
 from threading import Thread
 import json
 from pydub import AudioSegment
-from yandex_speech import TTS
-
-tts = TTS('jane', 'wav', '720044ba-7120-407c-be9a-aca0076bdb0e', speed=2.0)
 
 app = Flask(__name__)
+
+WAV_SPEED = 1.35
 
 # получение субтитров на нужном языке
 def get_transcript(video_id):
@@ -71,10 +71,21 @@ def generate_10_wavs(video_id, start_fragment):
 
     def generate():
         for i in range(start_fragment, end_fragment):
-            file_name = video_id + '_' + str(i) + '.wav'
             text = transcript[i]['text']
-            tts.generate(text=text)
-            tts.save(file_name)
+            tts = gTTS(text=text, lang=lang, slow=False)
+
+            file_name = video_id + '_' + str(i)
+            tts.save(file_name + '.mp3')
+
+            # gtts не может сделать нормальный .wav
+            AudioSegment.from_mp3(file_name + '.mp3').export(file_name + '.wav', format='wav')
+
+            wav = AudioSegment.from_file(file_name + '.wav')
+
+            # изменение скорости
+            new_wav = wav._spawn(wav.raw_data, overrides={"frame_rate": int(wav.frame_rate * WAV_SPEED)})
+            new_wav = new_wav.set_frame_rate(wav.frame_rate)
+            new_wav.export(file_name + '.wav', format='wav')
 
     thread = Thread(target=generate)
     thread.start()
@@ -90,3 +101,4 @@ def get_wav(video_id, fragment_id):
         return send_file(file_name, as_attachment=True)
     except:
         return 'File ' + file_name + ' not found'
+    
