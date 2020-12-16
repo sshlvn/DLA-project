@@ -11,11 +11,9 @@ librosa==0.7.2
 numba==0.48.0
 numpy==1.18.1
 pydub==0.23.1
-resampy==0.2.2
 scikit-learn==0.22.2.post1
 scipy==1.4.1
 SoundFile==0.10.3.post1
 Werkzeug==1.0.0
-wincertstore==0.2
 pandas==1.0.1
 pathlib==1.0.1
