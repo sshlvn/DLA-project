@@ -3,16 +3,13 @@ from gtts import gTTS
 from flask import Flask, Response, jsonify, request, send_file
 from threading import Thread
 import json
-# import librosa
 from pydub import AudioSegment
 
-# AudioSegment.converter = '/app/.apt/usr/local/bin/ffmpeg'
 
 app = Flask(__name__)
 
 # сохраняем video_id: (transcript, language)
 TRANSCRIPT_DICT = dict()
-
 
 @app.route('/json/<video_id>')
 def get_json(video_id):
@@ -64,16 +61,14 @@ def get_json(video_id):
             file_name = video_id + '_' + str(i)
             tts.save(file_name + '.mp3')
 
+            # gtts не может сделать нормальный .wav
             AudioSegment.from_mp3(file_name + '.mp3').export(file_name + '.wav', format='wav')
             
             sound = AudioSegment.from_file(file_name + '.wav')
 
-
-            sound_with_altered_frame_rate = sound._spawn(sound.raw_data, overrides={
-                 "frame_rate": int(sound.frame_rate * 2.0)
-              })
+            # изменение скорости
+            sound_with_altered_frame_rate = sound._spawn(sound.raw_data, overrides={"frame_rate": int(sound.frame_rate * 1.5)})
             new_sound = sound_with_altered_frame_rate.set_frame_rate(sound.frame_rate)
-            
             new_sound.export(file_name + '.wav', format='wav')
 
     thread = Thread(target=generate)
@@ -105,16 +100,14 @@ def generate_10_wavs(video_id, start_fragment):
             file_name = video_id + '_' + str(i)
             tts.save(file_name + '.mp3')
 
+            # gtts не может сделать нормальный .wav
             AudioSegment.from_mp3(file_name + '.mp3').export(file_name + '.wav', format='wav')
             
             sound = AudioSegment.from_file(file_name + '.wav')
 
-
-            sound_with_altered_frame_rate = sound._spawn(sound.raw_data, overrides={
-                 "frame_rate": int(sound.frame_rate * 2.0)
-              })
+            # изменение скорости
+            sound_with_altered_frame_rate = sound._spawn(sound.raw_data, overrides={"frame_rate": int(sound.frame_rate * 1.5)})
             new_sound = sound_with_altered_frame_rate.set_frame_rate(sound.frame_rate)
-            
             new_sound.export(file_name + '.wav', format='wav')
 
     thread = Thread(target=generate)
