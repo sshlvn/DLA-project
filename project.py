@@ -8,8 +8,6 @@ import sox
 
 app = Flask(__name__)
 
-# os.system('apt-get install sox libsox-fmt-mp3')
-# os.system('sudo dpkg -i libpng12.deb')
 
 def synthesize(text, language):
     folder_id = 'b1ggo3uv5jlc4dgbi4fm'
@@ -20,7 +18,7 @@ def synthesize(text, language):
         'Authorization': 'Bearer ' + iam_token,
     }
     
-    voice = 'filipp' if language == 'ru-RU' else 'nick'
+    voice = 'alena' if language == 'ru-RU' else 'nick'
 
     data = {
         'text': text,
@@ -29,7 +27,7 @@ def synthesize(text, language):
         'format': 'lpcm',
         'sampleRateHertz': 48000,
         'voice': voice,
-        'speed': '1.5',
+        'speed': '2.0',
     }
 
     with requests.post(url, headers=headers, data=data, stream=True) as resp:
@@ -115,8 +113,6 @@ def generate_10_wavs(video_id, start_fragment):
                     f.write(audio_content)
         
             os.system('sox -r 48000 -b 16 -e signed-integer -c 1 temp.raw ' + file_name)
-#             tfm = sox.Transformer()
-#             tfm.build('temp.raw', file_name, sample_rate_in=48000)
 
     thread = Thread(target=generate)
     thread.start()
