@@ -12,7 +12,7 @@ app = Flask(__name__)
 # запрос в Yandex SpeechKit для генерации речи
 def synthesize(text, language):
     folder_id = 'b1ggo3uv5jlc4dgbi4fm'
-    iam_token = 't1.9euelZrGkJKVnIyWl5eZnMaMmZTIz-3rnpWak86azMjOnonNyM6ck5zGzMjl9PddMBYB-u9HcUW-3fT3HV8TAfrvR3FFvg.Kd81ez3J2nzr0KLOiTSECBI3sne5CInGFj3nSfmR4OdoPXz4_rA-jjJKxMmucUgOR3JqhxjDRiT64ACBqVEtBA'
+    iam_token = 't1.9euelZrIipDPncySj5aTnsjIlYmame3rnpWak86azMjOnonNyM6ck5zGzMjl9Pc2eBMB-u8PN1Gw3fT3diYRAfrvDzdRsA.bAH1KHSLy3u3PRU2Ka95A74C_41-m2pE3bL-DqKZff4HRE_r25kbFZgfzP9ZQnzhGbe-dTxsobkqzu_xRBKcBw'
     url = 'https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize'
     
     headers = {
