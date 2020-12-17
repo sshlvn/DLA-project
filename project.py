@@ -4,10 +4,10 @@ from threading import Thread
 import json
 import os
 import requests
-# import sox
 
 app = Flask(__name__)
 
+whitelist = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,?!абвгдеёжзийклмнопрстуфхцчшщьыъэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯ')
 
 # запрос в Yandex SpeechKit для генерации речи
 def synthesize(text, language):
@@ -106,7 +106,10 @@ def generate_10_wavs(video_id, start_fragment):
 
     def generate():
         for i in range(start_fragment, end_fragment):
-            text = transcript[i]['text']
+            text = transcript[i]['text'].replace('\n', ' ')
+            # удаляю все символы кроме букв и .,?!
+            text = ''.join(filter(whitelist.__contains__, text))
+            
             file_name = video_id + '_' + str(i) + '.wav'
             
             with open('temp.raw', "wb") as f:
