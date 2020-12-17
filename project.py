@@ -125,6 +125,28 @@ def generate_10_wavs(video_id, start_fragment):
     return 'OK, generating ' + str(start_fragment) + ' - ' + str(end_fragment)
 
 
+# генерация всех вавок видео
+@app.route('/allwavs/<video_id>')
+def generate_all_wavs(video_id):
+    transcript, lang = get_transcript(video_id)
+
+    for i in range(len(transcript)):
+        text = transcript[i]['text'].replace('\n', ' ')
+        # удаляю все символы кроме букв и .,?!
+        text = ''.join(filter(whitelist.__contains__, text))
+
+        file_name = video_id + '_' + str(i) + '.wav'
+
+        with open('temp.raw', "wb") as f:
+            for audio_content in synthesize(text, lang):
+                f.write(audio_content)
+
+        sox_request = 'sox -r 48000 -b 16 -e signed-integer -c 1 "temp.raw" "{}"'.format(file_name)
+        os.system(sox_request)
+
+    return 'OK, generated ' + str(len(transcript))
+
+
 # получить wav файл
 @app.route('/wavs/<video_id>&&<fragment_id>')
 def get_wav(video_id, fragment_id):
