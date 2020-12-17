@@ -4,7 +4,7 @@ from threading import Thread
 import json
 import os
 import requests
-import sox
+# import sox
 
 app = Flask(__name__)
 
