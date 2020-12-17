@@ -1,0 +1,20 @@
+{
+  "name": "Youtube TTS",
+  "version": "1.0",
+  "description": "---",
+  "manifest_version": 2,
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.youtube.com/*",
+        "*://youtube.com/*"
+      ],
+      "js": ["main.js"]
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "webRequest",
+    "*://youtubetts.herokuapp.com/*"
+  ]
+}
