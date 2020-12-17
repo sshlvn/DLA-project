@@ -112,8 +112,9 @@ def generate_10_wavs(video_id, start_fragment):
             with open('temp.raw', "wb") as f:
                 for audio_content in synthesize(text, lang):
                     f.write(audio_content)
-        
-            os.system('sox -r 48000 -b 16 -e signed-integer -c 1 temp.raw ' + file_name)
+                    
+            sox_request = 'sox -r 48000 -b 16 -e signed-integer -c 1 "temp.raw" "{}"'.format(file_name)
+            os.system(sox_request)
 
     thread = Thread(target=generate)
     thread.start()
